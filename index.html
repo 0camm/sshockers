@@ -11,10 +11,10 @@
         cookie_flags: 'secure;samesite=none'
     };
     let pokiActive = false;
-    let crazyGamesActive = false;
+    let crazyPonusActive = false;
     let thirdPartyAdblocker = false;
     let testCrazy = false;
-    let crazyGamesHouseAdCheck = null;
+    let crazyPonusHouseAdCheck = null;
 </script>
 <script>window.JSCDN="https://cdn.jsdelivr.net/gh/apstudy/mathlete@fae00ff/";</script>
 <script src="https://cdn.jsdelivr.net/gh/apstudy/mathlete@fae00ff/app/checker.js"></script>
@@ -418,11 +418,11 @@
 
 <script>
     // we need a getter and setter for the vue instance
-    const getCrazyGamesActive = {
+    const getCrazyPonusActive = {
         _value: '',
         set value(newValue) {
             this._value = newValue;
-            crazyGamesActive = newValue;
+            crazyPonusActive = newValue;
             triggerCheck(newValue);
         },
         get value() {
@@ -431,12 +431,12 @@
     };
 
     function triggerCheck(value) {
-        if (crazyGamesHouseAdCheck) {
-            crazyGamesHouseAdCheck.isCrazyGames = value;
+        if (crazyPonusHouseAdCheck) {
+            crazyPonusHouseAdCheck.isCrazyPonus = value;
         }
     }
 
-    class CrazyGames {
+    class CrazyPonus {
         constructor() {
             this.initialized = false;
             this.crazysdk = null;
@@ -449,25 +449,25 @@
         }
 
         async init() {
-            if (!window.CrazyGames || !window.CrazyGames.SDK) {
-                console.log("CrazyGames SDK not available");
+            if (!window.CrazyPonus || !window.CrazyPonus.SDK) {
+                console.log("CrazyPonus SDK not available");
                 return;
             }
 
             try {
-                await window.CrazyGames.SDK.init();
-                this.crazysdk = window.CrazyGames.SDK;
+                await window.CrazyPonus.SDK.init();
+                this.crazysdk = window.CrazyPonus.SDK;
                 this.thirdPartyAdblocker = await this.crazysdk.ad.hasAdblock();
                 this.initialized = true;
                 this.game = this.crazysdk.game;
                 this.user = this.crazysdk.user;
-                crazyGamesActive = true;
-                getCrazyGamesActive.value = true;
+                crazyPonusActive = true;
+                getCrazyPonusActive.value = true;
                 // Add user authentication check on init
                 await this.checkUserAuth();
-                console.log("CrazyGames SDK initialized successfully.");
+                console.log("CrazyPonus SDK initialized successfully.");
             } catch (error) {
-                console.error("Failed to initialize CrazyGames SDK:", error);
+                console.error("Failed to initialize CrazyPonus SDK:", error);
             }
         }
         async performAction(action, ...args) {
@@ -617,7 +617,7 @@
     }
 </script>
 <style>
-    .hide-on-crazy-games {
+    .hide-on-crazy-Ponus {
         display: none;
     }
 </style><!-- Styles & Fonts -->
@@ -769,7 +769,7 @@ function storageFactory(getStorage) {
     })();
 </script>
 <!-- third party globals -->
-<!-- Crazy Games -->
+<!-- Crazy Ponus -->
 <!-- European Union detection -->
 <script>isFromEU = 0 ? true : false</script>
 <!-- AdInPlay -->
@@ -1396,12 +1396,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <!-- GDPR -->
     <gdpr id="gdpr" ref="gdpr" :loc="loc"></gdpr>
     <div ref="headerAdContainer"></div>
-    <account-panel v-show="ui.showHomeEquipUi" id="account_panel" ref="accountPanelHome" :loc="loc" :firebase-id="firebaseId" :selected-language-code="currentLanguageCode" :eggs="eggs" :languages="languages" :current-lang-options="locLanguage" :show-corner-buttons="ui.showCornerButtons" :is-private-game="extern.isPrivateGame" :show-bottom="true" :photo-url="photoUrl" :is-anonymous="isAnonymous" :is-of-age="isOfAge" :show-targeted-ads="showTargetedAds" :current-screen="showScreen" :screens="screens" :is-egg-store-sale="isEggStoreSaleItem" :is-subscriber="isSubscriber" @sign-in-clicked="onSignInClicked" @sign-out-clicked="onSignOutClicked" :is-twitch="twitchLinked" :play-clicked="playClicked" :crazy-games-active="ui.crazyGames" :crazy-games-user="crazyGamesUser"></account-panel>
+    <account-panel v-show="ui.showHomeEquipUi" id="account_panel" ref="accountPanelHome" :loc="loc" :firebase-id="firebaseId" :selected-language-code="currentLanguageCode" :eggs="eggs" :languages="languages" :current-lang-options="locLanguage" :show-corner-buttons="ui.showCornerButtons" :is-private-game="extern.isPrivateGame" :show-bottom="true" :photo-url="photoUrl" :is-anonymous="isAnonymous" :is-of-age="isOfAge" :show-targeted-ads="showTargetedAds" :current-screen="showScreen" :screens="screens" :is-egg-store-sale="isEggStoreSaleItem" :is-subscriber="isSubscriber" @sign-in-clicked="onSignInClicked" @sign-out-clicked="onSignOutClicked" :is-twitch="twitchLinked" :play-clicked="playClicked" :crazy-Ponus-active="ui.crazyPonus" :crazy-Ponus-user="crazyPonusUser"></account-panel>
     <div id="main-content" class="main-content display-grid height-100vh">
         <photo-booth-ui id="photoBooth" ref="photoBooth" v-show="!ui.showHomeEquipUi" :loc="loc" :player-name="playerName" :item-type-change="ui.photoBooth.type" @bg-change-color="onPhotoboothBgColorChange" @bg-change-image="onPhotoBoothBgImageChange" @hide-ui="onPhotoBoothHideUi"></photo-booth-ui>
         <aside ref="mainAside" v-show="showScreen !== screens.photoBooth" class="main-aside">
             <main-sidebar ref="mainMenu" v-show="ui.showHomeEquipUi" :loc="loc" :firebase-id="firebaseId" :player-name="playerName" :menu-items="ui.mainMenu" :current-screen="showScreen" :screens="screens" :mode="equipMode" :current-mode="currentEquipMode" :is-game-paused="game.isPaused" :in-game="game.on" :play-clicked="playClicked" :picked-game-type="currentGameType" @previous-screen="setPreviousScreen"></main-sidebar>
-            <house-ad v-show="showScreen !== screens.game && ui.showHomeEquipUi" :loc="loc" :upgrade-name="upgradeName" :is-upgraded="isUpgraded" :is-subscriber="isSubscriber" :has-mobile-reward="hasMobileReward" :crazy-games-active="ui.crazyGames" :is-poki="isPoki" :chw-count="chw.winnerCounter" :chw-ready="showAdBlockerVideoAd" :chw-limit-reached="chw.limitReached" :ad="ui.houseAds.small" :in-game="game.on" :play-clicked="playClicked" @chw-video-request="showNuggyPopup"></house-ad>
+            <house-ad v-show="showScreen !== screens.game && ui.showHomeEquipUi" :loc="loc" :upgrade-name="upgradeName" :is-upgraded="isUpgraded" :is-subscriber="isSubscriber" :has-mobile-reward="hasMobileReward" :crazy-Ponus-active="ui.crazyPonus" :is-poki="isPoki" :chw-count="chw.winnerCounter" :chw-ready="showAdBlockerVideoAd" :chw-limit-reached="chw.limitReached" :ad="ui.houseAds.small" :in-game="game.on" :play-clicked="playClicked" @chw-video-request="showNuggyPopup"></house-ad>
             <div id="chw-home">
                 <chw ref="chwHomeScreen" :loc="loc" :chw="chw" :firebase-id="firebaseId" :current-screen="showScreen" :screens="screens" :ui="ui" :play-clicked="playClicked"></chw>
             </div>
@@ -1414,7 +1414,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             </div>
             <home-screen id="home_screen" ref="homeScreen" v-show="(showScreen === screens.home || showScreen === screens.profile)"></home-screen>
             <equip-screen id="equip_screen" class="height-100vh" ref="equipScreen" v-show="showEquipScreens" @photo-booth-type-id="photoBoothTypeChange"></equip-screen>
-            <game-screen id="game_screen" ref="gameScreen" v-show="(showScreen === screens.game)" :kname="killName" :kdname="killedName" @show-welcome-bundle-popup="onWelcomeBundlePopupShow"></game-screen>
+            <game-screen id="game_screen" ref="Ponuscreen" v-show="(showScreen === screens.game)" :kname="killName" :kdname="killedName" @show-welcome-bundle-popup="onWelcomeBundlePopupShow"></game-screen>
         </main>
     </div>
     <div id="gameDescription" v-show="(showScreen === screens.home)">
@@ -1905,34 +1905,34 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         </template>
     </large-popup>
 
-    <small-popup v-if="crazyGamesUser && crazyGamesUser.hasLinked" id="crazyGamesUserManagementPopup" ref="crazyGamesUserManagementPopup" :overlay-close="true" hide-confirm="true" hide-cancel="true">
+    <small-popup v-if="crazyPonusUser && crazyPonusUser.hasLinked" id="crazyPonusUserManagementPopup" ref="crazyPonusUserManagementPopup" :overlay-close="true" hide-confirm="true" hide-cancel="true">
         <template slot="content">
-            <h1 class="text_white">{{ loc.crazygames_user_management_popup_title }}</h1>
-            <p class="ss_marginbottom_xl" v-html="loc.crazygames_user_management_popup_desc"></p>
-            <p v-if="cgCreatedAccount || isAnonymous" class="ss_marginbottom_xl" v-html="loc.crazygames_user_management_popup_anonymous_text"></p>
+            <h1 class="text_white">{{ loc.crazyPonus_user_management_popup_title }}</h1>
+            <p class="ss_marginbottom_xl" v-html="loc.crazyPonus_user_management_popup_desc"></p>
+            <p v-if="cgCreatedAccount || isAnonymous" class="ss_marginbottom_xl" v-html="loc.crazyPonus_user_management_popup_anonymous_text"></p>
             <p v-else class="ss_marginbottom_xl" v-html="cgUserManagementPopupContent"></p>
             <div class="display-grid grid-auto-flow-column gap-1">
-                <button v-if="!crazyGamesUser.isAnonymous" class="ss_button btn_md btn_red bevel_red" @click="showCrazyGamesDelink"><i class="fas fa-unlink"></i> {{ loc.crazygames_user_management_popup_delink_btn_text }}</button>
-                <button v-if="crazyGamesUser.isAnonymous" class="ss_button btn_md btn_green bevel_green" @click="onCGLinkToAnotherAccountClicked"><i class="fas fa-link"></i> Link to another account</button>
-                <button v-if="crazyGamesUser.isAnonymous" class="ss_button btn_md btn_green bevel_green" @click="onCGSignInClicked">{{ loc.contact_support }}</button>
+                <button v-if="!crazyPonusUser.isAnonymous" class="ss_button btn_md btn_red bevel_red" @click="showCrazyPonusDelink"><i class="fas fa-unlink"></i> {{ loc.crazyPonus_user_management_popup_delink_btn_text }}</button>
+                <button v-if="crazyPonusUser.isAnonymous" class="ss_button btn_md btn_green bevel_green" @click="onCGLinkToAnotherAccountClicked"><i class="fas fa-link"></i> Link to another account</button>
+                <button v-if="crazyPonusUser.isAnonymous" class="ss_button btn_md btn_green bevel_green" @click="onCGSignInClicked">{{ loc.contact_support }}</button>
             </div>
         </template>
-        <!-- <template slot="confirm" v-if="crazyGamesUser.isAnonymous">{{ loc.ok }}</template> -->
+        <!-- <template slot="confirm" v-if="crazyPonusUser.isAnonymous">{{ loc.ok }}</template> -->
     </small-popup>
 
-    <small-popup id="crazyGamesDelink" ref="crazyGamesDelink" @popup-confirm="onCrazyGamesDelink">
-        <template slot="header">{{ loc.crazygames_delink_title }}</template>
+    <small-popup id="crazyPonusDelink" ref="crazyPonusDelink" @popup-confirm="onCrazyPonusDelink">
+        <template slot="header">{{ loc.crazyPonus_delink_title }}</template>
         <template slot="content">
-            <p>{{ loc.crazygames_delink_content }}</p>
+            <p>{{ loc.crazyPonus_delink_content }}</p>
         </template>
         <template slot="cancel">{{ loc.no }}</template>
         <template slot="confirm">{{ loc.yes }}</template>
     </small-popup>
 
-    <small-popup id="crazyGamesAutoLinkPopup" ref="crazyGamesAutoLinkPopup" @popup-confirm="onCrazyGamesAutoLink">
-        <template slot="header">{{ loc.crazygames_auto_link_title }}</template>
+    <small-popup id="crazyPonusAutoLinkPopup" ref="crazyPonusAutoLinkPopup" @popup-confirm="onCrazyPonusAutoLink">
+        <template slot="header">{{ loc.crazyPonus_auto_link_title }}</template>
         <template slot="content">
-            <p>{{ loc.crazygames_auto_link_content }}</p>
+            <p>{{ loc.crazyPonus_auto_link_content }}</p>
             <p>Player ID: {{ id }}</p>
             <p>Firebase ID: {{ firebaseId }}</p>
         </template>
@@ -2210,7 +2210,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 		events: {
 			twitch: false,
 		},
-		crazyGames: false,
+		crazyPonus: false,
 
 		photoBooth: {
 			type: 1,
@@ -2350,8 +2350,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 		socialMedia: {
 			footer: [
 				{name: 'Facebook', reward: 'Facebook', url: 'https://www.facebook.com/bluewizarddigital', imgPath: 'footer-social-media-bubble-facebook.webp', icon: 'fa-facebook', id: 1227, owned: false},
-				{name: 'Twitter', reward: 'Twitter', url: 'https://twitter.com/bluewizardgames', imgPath: 'footer-social-media-bubble-twitter.webp', icon: 'fa-twitter', id: 1234, owned: false},
-				{name: 'Instagram', reward: 'Instagram', url: 'https://www.instagram.com/bluewizardgames/', imgPath: 'footer-social-media-bubble-instagram.webp', icon: 'fa-instagram', id: 1219, owned: false},
+				{name: 'Twitter', reward: 'Twitter', url: 'https://twitter.com/bluewizardPonus', imgPath: 'footer-social-media-bubble-twitter.webp', icon: 'fa-twitter', id: 1234, owned: false},
+				{name: 'Instagram', reward: 'Instagram', url: 'https://www.instagram.com/bluewizardPonus/', imgPath: 'footer-social-media-bubble-instagram.webp', icon: 'fa-instagram', id: 1219, owned: false},
 				{name: 'TikTok', reward: 'tiktok', url: 'https://www.tiktok.com/@bluewizarddigital', imgPath: 'footer-social-media-bubble-tiktok.webp', icon: 'fa-tiktok', id: 1208, owned: false},
 				{name: 'Discord', reward: 'discord', url: 'https://discord.gg/bluewizard', imgPath: 'footer-social-media-bubble-discord.webp', icon: 'fa-discord', id: 1200, owned: false},
 				{name: 'Steam', reward: 'Steam', url: 'https://store.steampowered.com/publisher/bluewizard', imgPath: 'footer-social-media-bubble-steam.webp', icon: 'fa-steam-symbol', id: 1223, owned: false},
@@ -3107,7 +3107,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 		],
 		currentIdx: 0,
 	},
-	crazyGamesUser: {
+	crazyPonusUser: {
 		hasAccount: false,
 		hasLinked: false,
 		username: '',
@@ -3179,7 +3179,7 @@ function createDisplayAdComponent(templateId) {
                 const wrap = document.getElementById(this.id);
                 wrap.appendChild(this.theAd);
 
-                if (this.houseAd && !crazyGamesActive && !pokiActive) {
+                if (this.houseAd && !crazyPonusActive && !pokiActive) {
                     googletag.cmd.push(function() { googletag.display('ShellShockers_LoadingScreen_HouseAds') });
                 }
 
@@ -3211,10 +3211,10 @@ function createDisplayAdComponent(templateId) {
                 this.isAdShowing = visible;
 
 				// if (!this.isAdShowing) {
-                //    if (!crazyGamesActive) window.removeEventListener('resize', this.hideAdBasedOnscreenSize);
+                //    if (!crazyPonusActive) window.removeEventListener('resize', this.hideAdBasedOnscreenSize);
 				// } else {
                 //     this.triggerAd();
-				// 	if (!crazyGamesActive) {
+				// 	if (!crazyPonusActive) {
 				// 		setTimeout(() => this.hideAdBasedOnscreenSize(), 500);
 				// 		window.addEventListener('resize', this.hideAdBasedOnscreenSize);
 				// 	}
@@ -3234,7 +3234,7 @@ function createDisplayAdComponent(templateId) {
 				console.log(`display ad container ${this.id} hiding`);
                 this.setVisible(false);
             },
-            crazyGamesAd(id) {
+            crazyPonusAd(id) {
 				crazySdk.requestBanner({
                     id: id,
 					width: this.width,
@@ -3250,7 +3250,7 @@ function createDisplayAdComponent(templateId) {
                     return;
                 }
 
-                if (!crazyGamesActive && !testCrazy) {
+                if (!crazyPonusActive && !testCrazy) {
 
                     if (this.houseAd) {
                         gtagInHouseLoadingBanner();
@@ -3288,7 +3288,7 @@ function createDisplayAdComponent(templateId) {
 				if (extern.productBlockAds) {
 					return;
 				} else {
-					if (!crazyGamesActive) {
+					if (!crazyPonusActive) {
 						console.log('display ad destroy', this.adUnit);
 						aiptag.cmd.display.push(() => {
 							aipDisplayTag.destroySlot(this.adUnit);
@@ -4955,7 +4955,7 @@ var comp_settings = {
 		},
 
 		showForCrazyGame(locRef) {
-			return locRef !== 'keybindings_despawn' || crazyGamesActive;
+			return locRef !== 'keybindings_despawn' || crazyPonusActive;
 		}
 	},
 	computed: {
@@ -6625,7 +6625,7 @@ var comp_social_panel = {
 		<!-- <gauge-meter v-show="showScreen !== screens.profile" ref="gaugeMeter" @gauge-meter-click="onGaugeMeterClick"></gauge-meter> -->
 		<div class="homescreen-main-wrapper display-grid">
 			<div class="box_relative fullwidth">
-				<profile-screen id="profileScreen" ref="profileScreen" :loc="loc" :ui="ui" :claimed="challengesClaimed" :player-id="id" :crazy-games-user="crazyGamesUser" :player-name="playerName" :account-created="accountCreated" v-show="(showScreen === screens.profile)" @leave-game-confimed="leaveGameConfirmed"></profile-screen>
+				<profile-screen id="profileScreen" ref="profileScreen" :loc="loc" :ui="ui" :claimed="challengesClaimed" :player-id="id" :crazy-Ponus-user="crazyPonusUser" :player-name="playerName" :account-created="accountCreated" v-show="(showScreen === screens.profile)" @leave-game-confimed="leaveGameConfirmed"></profile-screen>
 				<play-panel id="play_game" ref="playPanel" v-show="showScreen === screens.home" :show-screen="showScreen" :screens="screens" :loc="loc" :player-name="playerName" :game-types="gameTypes" :current-game-type="currentGameType" :is-game-ready='accountSettled' :region-list="regionList" :current-region-id="currentRegionId" :home="home" :play-clicked="playClicked" :current-class="classIdx" :language-code="currentLanguageCode" @playerNameChanged="onPlayerNameChanged" @game-type-changed="onGameTypeChanged" :maps="maps"></play-panel>
 			</div>
 			<aside class="secondary-aside box_relative display-grid justify-content-end">
@@ -7051,15 +7051,15 @@ var comp_social_panel = {
                 :sign-in-button-visibility="signInButtonVisibility"
                 :is-private-game="isPrivateGame"
                 :show-share-link-button="showShareLinkButton"
-                :is-crazy-games="isCrazyGames"
-                :crazy-games-active="crazyGamesActive"
+                :is-crazy-Ponus="isCrazyPonus"
+                :crazy-Ponus-active="crazyPonusActive"
                 :cg-user-btn-text="cgUserBtnText"
                 :cg-profile-picture-url="cgProfilePictureUrl"
-                :is-crazy-games-linked="isCrazyGamesLinked"
+                :is-crazy-Ponus-linked="isCrazyPonusLinked"
                 :loc="loc"
                 @egg-store-click="handleEggStoreClick"
                 @account-btn-click="handleAccountBtnClick"
-                @crazy-games-link-click="handleCrazyGamesLinkClick"
+                @crazy-Ponus-link-click="handleCrazyPonusLinkClick"
                 @game-options-click="handleGameOptionsClick"
                 @tutorial-click="handleTutorialClick"
                 @share-link-click="handleShareLinkClick"
@@ -7087,12 +7087,12 @@ var comp_social_panel = {
             @click="$emit('egg-store-click')"
         />
         
-        <crazy-games-button
-            v-if="crazyGamesActive && showCornerButtons"
+        <crazy-Ponus-button
+            v-if="crazyPonusActive && showCornerButtons"
             :text="cgUserBtnText"
             :img="cgProfilePictureUrl"
-            :is-linked="isCrazyGamesLinked"
-            @click="$emit('crazy-games-link-click')"
+            :is-linked="isCrazyPonusLinked"
+            @click="$emit('crazy-Ponus-link-click')"
         />
         
         <account-status-button
@@ -7111,8 +7111,8 @@ var comp_social_panel = {
             :current-screen="currentScreen"
             :screens="screens"
             :show-share-link-button="showShareLinkButton"
-            :crazy-games-active="crazyGamesActive"
-            :is-crazy-games="isCrazyGames"
+            :crazy-Ponus-active="crazyPonusActive"
+            :is-crazy-Ponus="isCrazyPonus"
             :loc="loc"
             @game-options-click="$emit('game-options-click')"
             @tutorial-click="$emit('tutorial-click')"
@@ -7171,7 +7171,7 @@ var comp_social_panel = {
         </button>
         
         <button 
-            v-show="isGameScreen"
+            v-show="isPonuscreen"
             class="ss_button btn_blue bevel_blue box_relative pause-screen-ui btn-account-w-icon text-shadow-none text_blue1" 
             :title="getLocValue('tutorial_title')"
             @click="$emit('tutorial-click')"
@@ -7197,7 +7197,7 @@ var comp_social_panel = {
         </button>
 
         <button
-            v-if="!crazyGamesActive"
+            v-if="!crazyPonusActive"
             class="ss_button btn_blue bevel_blue box_relative pause-screen-ui btn-account-w-icon text-shadow-none text_blue1" 
             :title="getLocValue('account_title_fullscreen')"
             @click="$emit('fullscreen-click')"
@@ -7207,13 +7207,13 @@ var comp_social_panel = {
     </div>
 </script>
 
-<!-- Crazy Games Button Sub-component -->
-<script id="crazy-games-button-template" type="text/x-template">
+<!-- Crazy Ponus Button Sub-component -->
+<script id="crazy-Ponus-button-template" type="text/x-template">
     <button 
         class="width-auto ss_button btn_yolk btn-account-status ss_button_cg_user display-grid gap-1 text-left grid-column-auto-1 align-items-center justify-content-center" 
         @click="$emit('click')"
     >
-        <img v-if="text.img" :src="text.img" alt="Crazy Games Profile Picture" class="icon-md svg-icon">
+        <img v-if="text.img" :src="text.img" alt="Crazy Ponus Profile Picture" class="icon-md svg-icon">
         <div>
             <span>{{ text.text }}</span>
             <span v-show="!text.isLinked && text.isLoggedIn" class="display-block font-size-lg">Link to Shell Shockers</span>
@@ -7469,7 +7469,7 @@ var comp_social_panel = {
                 type: Boolean,
                 default: false
             },
-            crazyGamesActive: {
+            crazyPonusActive: {
                 type: Boolean,
                 default: false
             },
@@ -7487,7 +7487,7 @@ var comp_social_panel = {
                 const vueData = safeGlobal.vueApp?.vueData;
                 return vueData?.icon?.settings || 'fas fa-cog';
             },
-            isGameScreen() {
+            isPonuscreen() {
                 return Number(this.currentScreen) === Number(this.screens.game);
             }
         },
@@ -7498,9 +7498,9 @@ var comp_social_panel = {
         }
     };
 
-    // Crazy Games Button Component
-    const CrazyGamesButtonComponent = {
-        template: '#crazy-games-button-template',
+    // Crazy Ponus Button Component
+    const CrazyPonusButtonComponent = {
+        template: '#crazy-Ponus-button-template',
         props: {
             text: {
                 type: Object,
@@ -7529,7 +7529,7 @@ var comp_social_panel = {
             'egg-counter': EggCounterComponent,
             'account-status-button': AccountStatusButtonComponent,
             'corner-buttons': CornerButtonsComponent,
-            'crazy-games-button': CrazyGamesButtonComponent
+            'crazy-Ponus-button': CrazyPonusButtonComponent
         },
         props: {
             currentScreen: {
@@ -7580,11 +7580,11 @@ var comp_social_panel = {
                 type: Boolean,
                 default: false
             },
-            isCrazyGames: {
+            isCrazyPonus: {
                 type: Boolean,
                 default: false
             },
-            crazyGamesActive: {
+            crazyPonusActive: {
                 type: Boolean,
                 default: false
             },
@@ -7601,7 +7601,7 @@ var comp_social_panel = {
                 type: String,
                 default: ''
             },
-            isCrazyGamesLinked: {
+            isCrazyPonusLinked: {
                 type: [Boolean, String],
                 default: ''
             },
@@ -7714,7 +7714,7 @@ var comp_social_panel = {
                 type: Boolean,
                 default: false
             },
-            crazyGamesUser: {
+            crazyPonusUser: {
                 type: Object,
                 default: () => ({
                     hasAccount: false,
@@ -7725,7 +7725,7 @@ var comp_social_panel = {
                     isAnonymous: true,
                 })
             },
-            crazyGamesActive: {
+            crazyPonusActive: {
                 type: Boolean,
                 default: false
             },
@@ -7794,8 +7794,8 @@ var comp_social_panel = {
             },
 
             cgUserBtnText() {
-                // Early exit if CrazyGames isn't active
-                if (!this.crazyGamesActive) return undefined;
+                // Early exit if CrazyPonus isn't active
+                if (!this.crazyPonusActive) return undefined;
 
                 const sdk = window?.crazySdk;
 
@@ -7805,21 +7805,21 @@ var comp_social_panel = {
                 }
 
                 // Get the current user from the SDK or what might have been set when user logs in after load
-                const currentUser = sdk?.getCurrentUser() || this.crazyGamesUser;
+                const currentUser = sdk?.getCurrentUser() || this.crazyPonusUser;
 
-                const localUser = this.crazyGamesUser;
+                const localUser = this.crazyPonusUser;
 
-                // Not logged into CrazyGames
+                // Not logged into CrazyPonus
                 if (!currentUser?.username) {
                     return this.createBaseState(this.loc.sign_in_cg_not_logged_in);
                 }
 
-                // Logged into CrazyGames, but no Firebase account
+                // Logged into CrazyPonus, but no Firebase account
                 if (!this.firebaseId) {
                     return this.createBaseState(this.loc.sign_in_cg_not_logged_in_no_account);
                 }
 
-                // Has Firebase account but hasn't linked CrazyGames yet
+                // Has Firebase account but hasn't linked CrazyPonus yet
                 if (localUser?.hasAccount && !localUser?.hasLinked) {
                     return this.createBaseState(this.loc.sign_in_link_cg);
                 }
@@ -7827,22 +7827,22 @@ var comp_social_panel = {
                 // Fully linked account
                 return {
                     text: currentUser.username || this.loc.sign_in_cg_linked,
-                    img: currentUser.profilePictureUrl || 'https://cdn.jsdelivr.net/gh/apstudy/mathlete@fae00ff/img/crazy-games-logo.png',
+                    img: currentUser.profilePictureUrl || 'https://cdn.jsdelivr.net/gh/apstudy/mathlete@fae00ff/img/crazy-Ponus-logo.png',
                     isLinked: localUser?.hasLinked || false,
                     isLoggedIn: true
                 };
             },
 
-            isCrazyGamesLinked() {
-                if (this.crazyGamesUser?.hasLinked) {
-                    return this.loc.linked_with_crazygames;
+            isCrazyPonusLinked() {
+                if (this.crazyPonusUser?.hasLinked) {
+                    return this.loc.linked_with_crazyPonus;
                 }
                 return false;
             },
 
             cgProfilePictureUrl() {
-                if (this.crazyGamesActive) {
-                    const user = this.crazyGamesUser || {
+                if (this.crazyPonusActive) {
+                    const user = this.crazyPonusUser || {
                         hasAccount: false,
                         hasLinked: false,
                         username: '',
@@ -7850,7 +7850,7 @@ var comp_social_panel = {
                         userLoggedIn: false,
                         isAnonymous: true,
                     };
-                    return user?.profilePictureUrl || 'https://cdn.jsdelivr.net/gh/apstudy/mathlete@fae00ff/img/crazy-games-logo.png';
+                    return user?.profilePictureUrl || 'https://cdn.jsdelivr.net/gh/apstudy/mathlete@fae00ff/img/crazy-Ponus-logo.png';
                 }
                 return '';
             },
@@ -7875,7 +7875,7 @@ var comp_social_panel = {
             signInButtonVisibility() {
                 if (!this.showNotInGame) return false;
 
-                if (this.crazyGamesActive) {
+                if (this.crazyPonusActive) {
 
                     const providerData = firebase?.auth()?.currentUser?.providerData || [];
 
@@ -7885,7 +7885,7 @@ var comp_social_panel = {
                         if (!this.firebaseId) {
                             return false;
                         } else {
-                            return this.crazyGamesUser?.hasLinked;
+                            return this.crazyPonusUser?.hasLinked;
                         }
                     }
 
@@ -7898,8 +7898,8 @@ var comp_social_panel = {
                 return extern?.isGameOwner ?? false;
             },
 
-            isCrazyGames() {
-                return !this.crazyGamesActive;
+            isCrazyPonus() {
+                return !this.crazyPonusActive;
             }
         },
 
@@ -7920,7 +7920,7 @@ var comp_social_panel = {
             createBaseState(text) {
                 return {
                     text: text,
-                    img: 'https://cdn.jsdelivr.net/gh/apstudy/mathlete@fae00ff/img/crazy-games-logo.png',
+                    img: 'https://cdn.jsdelivr.net/gh/apstudy/mathlete@fae00ff/img/crazy-Ponus-logo.png',
                     isLinked: false,
                     isLoggedIn: false
                 };
@@ -8012,25 +8012,25 @@ var comp_social_panel = {
                 }
             },
 
-            async handleCrazyGamesLinkClick() {
-                if (!this.crazyGamesActive) return null;
+            async handleCrazyPonusLinkClick() {
+                if (!this.crazyPonusActive) return null;
 
                 const cgAccountAvailable = await crazySdk.isUserAccountAvailable();
 
-                console.log('handleCrazyGamesLinkClick cgAccountAvailable', cgAccountAvailable);
+                console.log('handleCrazyPonusLinkClick cgAccountAvailable', cgAccountAvailable);
 
                 if (cgAccountAvailable) {
-                    const cgUser = await window.CrazyGames.SDK.user.getUser();
-                    console.log('handleCrazyGamesLinkClick cgUser', cgUser);
+                    const cgUser = await window.CrazyPonus.SDK.user.getUser();
+                    console.log('handleCrazyPonusLinkClick cgUser', cgUser);
 
                     if (!cgUser) {
                         safeGlobal.BAWK.play('ui_click');
-                        safeGlobal.extern.showCrazyGamesAuthPrompt();
+                        safeGlobal.extern.showCrazyPonusAuthPrompt();
                         return;
                     }
                 }
 
-                const user = this.crazyGamesUser || {
+                const user = this.crazyPonusUser || {
                     hasAccount: false,
                     hasLinked: false,
                     username: '',
@@ -8053,7 +8053,7 @@ var comp_social_panel = {
                 }
 
                 if (user.hasAccount && user?.hasLinked) {
-                    vueApp.showCrazyGamesUserManagementPopup();
+                    vueApp.showCrazyPonusUserManagementPopup();
                     return;
                 }
 
@@ -8507,7 +8507,7 @@ var comp_region_list_popup = {
                 this.$refs.createPrivateGame.removeKeydown();
             },
 
-            onJoinPrivateGameClickCrazyGames() {
+            onJoinPrivateGameClickCrazyPonus() {
                 this.showCreateGameOnly = true;
                 this.showJoinPrivateGamePopup(vueData.home.joinPrivateGamePopup.code);
                 BAWK.play('ui_popupopen');
@@ -8777,9 +8777,9 @@ var comp_footer_links_panel = {
 				</h4>
 				<img class="house-ad-img" :class="imgCls" :src="imgSrc" :alt="altText" @click="adOnClick">
 			</div>
-			<div v-if="!isCrazyGames" class="ss_margintop box_relative">
-				<a href="https://freegames.io/tag/bluewizard?utm_source=shellshockershomepage&utm_medium=referral" target="_blank" title="Play Free Games on... well, freegames.io">
-					<img v-lazyload :data-src="portalImage" :alt="portalAltText" class="display-block center_h free-games-logo lazy-load">
+			<div v-if="!isCrazyPonus" class="ss_margintop box_relative">
+				<a href="https://freePonus.io/tag/bluewizard?utm_source=shellshockershomepage&utm_medium=referral" target="_blank" title="Play Free Ponus on... well, freePonus.io">
+					<img v-lazyload :data-src="portalImage" :alt="portalAltText" class="display-block center_h free-Ponus-logo lazy-load">
 				</a>
 			</div>
 		</div>
@@ -8789,16 +8789,16 @@ var comp_footer_links_panel = {
 <script>
     const CompHouseAd = {
         template: '#comp-vip-cta',
-        props: ['loc', 'upgradeName', 'isUpgraded', 'isSubscriber', 'hasMobileReward', 'isPoki', 'chwCount', 'chwReady', 'chwLimitReached', 'ad', 'crazyGamesActive', 'inGame', 'playClicked'],
+        props: ['loc', 'upgradeName', 'isUpgraded', 'isSubscriber', 'hasMobileReward', 'isPoki', 'chwCount', 'chwReady', 'chwLimitReached', 'ad', 'crazyPonusActive', 'inGame', 'playClicked'],
 		data: function () {
             return {
 				isVisible: true,
-				portalImage: 'https://cdn.jsdelivr.net/gh/apstudy/mathlete@fae00ff/img/free-games-io2.webp',
-				portalAltText: 'Free Games .io logo'
+				portalImage: 'https://cdn.jsdelivr.net/gh/apstudy/mathlete@fae00ff/img/free-Ponus-io2.webp',
+				portalAltText: 'Free Ponus .io logo'
 			}
 		},
 		created() {
-			crazyGamesHouseAdCheck = this;
+			crazyPonusHouseAdCheck = this;
 		},
         methods: {
 			adOnClick() {
@@ -8847,8 +8847,8 @@ var comp_footer_links_panel = {
 				}
 				return `${this.ad.label.replace(/\s+/g, '-').toLowerCase()}-img`;
 			},
-			isCrazyGames() {
-				return crazyGamesActive;
+			isCrazyPonus() {
+				return crazyPonusActive;
 			}
 		},
         watch: {
@@ -9618,9 +9618,9 @@ var CompMediaPanel = {
         methods: {
 			fetchJson() {
 				extern.requestJson('https://cdn.jsdelivr.net/gh/apstudy/mathlete@fae00ff/data/shellNews.json', (data) => {
-					if (crazyGamesActive) {
+					if (crazyPonusActive) {
 						const newNews = data.filter((item, idx) => {
-							if (item.hideOnCrazyGames !== null && item.hideOnCrazyGames) {
+							if (item.hideOnCrazyPonus !== null && item.hideOnCrazyPonus) {
 								return false;
 							} else {
 								return true;
@@ -9758,10 +9758,10 @@ var CompMediaPanel = {
 			},
 
 			newsItems() {
-				// crazyGamesActive = true;
-				if (crazyGamesActive) {
+				// crazyPonusActive = true;
+				if (crazyPonusActive) {
 					const newNews = this.newsfeedItems.filter((item, idx) => {
-						if (item.hideOnCrazyGames !== null && item.hideOnCrazyGames) {
+						if (item.hideOnCrazyPonus !== null && item.hideOnCrazyPonus) {
 							return false;
 						} else {
 							return true;
@@ -10397,7 +10397,7 @@ const PlayerNameInput = {
         },
         methods: {
             onLogoClick(e) {
-                if (extern.inGame || crazyGamesActive) {
+                if (extern.inGame || crazyPonusActive) {
                     e.preventDefault();
                     return;
                 }
@@ -10432,7 +10432,7 @@ const PlayerNameInput = {
 					<section>
 						<h1 class="text-shadow-black-40 text_white nospace">{{ playerName }}</h1>
                         <p v-if="playerId" class="account-create-date nospace text_white opacity-7" @click="copyPlayerId" style="cursor: pointer">Player ID: {{ playerId }} <i class="far fa-copy"></i></p>
-                        <p v-if="cgUserHasLinked" class="account-create-date nospace text_white opacity-7"> Crazy Games: <strong>{{ crazyGamesUser.username }}</strong></p>
+                        <p v-if="cgUserHasLinked" class="account-create-date nospace text_white opacity-7"> Crazy Ponus: <strong>{{ crazyPonusUser.username }}</strong></p>
 						<!-- <player-name :loc="loc" :player-name="playerName" :picked-game-type="currentGameType" :current-screen="showScreen" :screens="screens"></player-name> -->
 						<!--button v-if="showTwitchEvent" class="ss_button btn-twitch bevel_twitch justify-content-center btn_sm box_relative f_row gap-sm align-items-center" @click="onTwitchDropsClick"><i aria-hidden="true" class="fab fa-twitch"></i> {{ isTwitchLinked }}</button>-->
 					</section>
@@ -10637,7 +10637,7 @@ var STATSPOPUP = {
             // 'player-name': PlayerNameInput
         },
 
-        props: ['claimed', 'playerId', 'crazyGamesUser'],
+        props: ['claimed', 'playerId', 'crazyPonusUser'],
 
         data: function() {
             return vueData;
@@ -10653,7 +10653,7 @@ var STATSPOPUP = {
                     return;
                 }
 
-                if (crazyGamesActive && this.cgUserHasLinked) {
+                if (crazyPonusActive && this.cgUserHasLinked) {
                     return;
                 }
 
@@ -10735,22 +10735,22 @@ var STATSPOPUP = {
                     return this.loc.sign_in;
                 }
 
-                if (crazyGamesActive && this.cgUserHasLinked) {
-                    return this.loc.crazygames_logout_text;
+                if (crazyPonusActive && this.cgUserHasLinked) {
+                    return this.loc.crazyPonus_logout_text;
                 }
 
                 return this.loc.sign_out;
             },
 
             disableAccountBtn() {
-                if (crazyGamesActive && this.cgUserHasLinked) {
+                if (crazyPonusActive && this.cgUserHasLinked) {
                     return true;
                 }
 
                 return false;
             },
             cgUserHasLinked() {
-                return this.crazyGamesUser?.hasLinked;
+                return this.crazyPonusUser?.hasLinked;
             }
         }
     };
@@ -13307,8 +13307,8 @@ var comp_egg_store = {
 		<div ref="gameUIWrapper">
 			<div ref="gameUiInner" class="paused-game-ui z-index-1 centered_x fullwidth" v-show="showScreen === screens.game">
 				<!-- <div class="factions-game-score centered_x">
-					<div class="faction-label faction-0-label f_row align-items-center justify-content-center roundme_sm box_absolute right-0 tool-tip"><span class="tool-tip-text faction-tooltip">{{ loc.factions_in_game_tip.format(loc.faction_b_title) }}</span><img class="faction-game-logo box_absolute" src="https://cdn.jsdelivr.net/gh/apstudy/mathlete@fae00ff/img/gauge-bar/faction-egg-masters.png" alt=""><img src="https://cdn.jsdelivr.net/gh/apstudy/mathlete@fae00ff/img/gauge-bar/ico_crossbones.svg" alt=""> <i class="display-block">{{ factionsBGameScore }}</i></div>
-					<div class="faction-label faction-1-label f_row align-items-center justify-content-center roundme_sm box_absolute left-0 tool-tip"><span class="tool-tip-text faction-tooltip">{{ loc.factions_in_game_tip.format(loc.faction_a_title) }}</span><img class="faction-game-logo box_absolute" src="https://cdn.jsdelivr.net/gh/apstudy/mathlete@fae00ff/img/gauge-bar/faction-egg-assasins.png" alt=""><img src="https://cdn.jsdelivr.net/gh/apstudy/mathlete@fae00ff/img/gauge-bar/ico_crossbones.svg" alt=""> <i class="display-block">{{ factionsAGameScore }}</i></div>
+					<div class="faction-label faction-0-label f_row align-items-center justify-content-center roundme_sm box_absolute right-0 tool-tip"><span class="tool-tip-text faction-tooltip">{{ loc.factions_in_game_tip.format(loc.faction_b_title) }}</span><img class="faction-game-logo box_absolute" src="https://cdn.jsdelivr.net/gh/apstudy/mathlete@fae00ff/img/gauge-bar/faction-egg-masters.png" alt=""><img src="https://cdn.jsdelivr.net/gh/apstudy/mathlete@fae00ff/img/gauge-bar/ico_crossbones.svg" alt=""> <i class="display-block">{{ factionsBPonuscore }}</i></div>
+					<div class="faction-label faction-1-label f_row align-items-center justify-content-center roundme_sm box_absolute left-0 tool-tip"><span class="tool-tip-text faction-tooltip">{{ loc.factions_in_game_tip.format(loc.faction_a_title) }}</span><img class="faction-game-logo box_absolute" src="https://cdn.jsdelivr.net/gh/apstudy/mathlete@fae00ff/img/gauge-bar/faction-egg-assasins.png" alt=""><img src="https://cdn.jsdelivr.net/gh/apstudy/mathlete@fae00ff/img/gauge-bar/ico_crossbones.svg" alt=""> <i class="display-block">{{ factionsAPonuscore }}</i></div>
 				</div> -->
 <!-- 
 				<div v-show="game.pauseScreen.showMenu" class="centered_x z-index-1 bg_blue3">
@@ -13908,7 +13908,7 @@ const CompShellStreakMsg = {
             },
 
             hidePopupsIfGameCloses: function() {
-                const gamePopups = vueApp.$refs.gameScreen.$children;
+                const gamePopups = vueApp.$refs.Ponuscreen.$children;
                 if (Array.isArray(gamePopups)) {
                     gamePopups.forEach(gamePopup => {
                         ;
@@ -14135,7 +14135,7 @@ const CompShellStreakMsg = {
                 setTimeout(() => this.songChanged = false, 2000);
             },
 
-            // So crazy games requires an array for multiple display ad calls on the same screen
+            // So crazy Ponus requires an array for multiple display ad calls on the same screen
             crazyAdsRespawn() {
                 this.cGrespawnBannerErrors = 0;
                 this.$nextTick(() => {
@@ -14604,7 +14604,7 @@ const CompShellStreakMsg = {
             wakeTheChw() {
                 return this.loc.chw_wake.format(200 * (this.chw.resets + 1));
             },
-            // eggOrgGameStats() {
+            // eggOrgPonustats() {
             // 	return this.$eggOrgFormatTeamScores(this.game.eggOrg.stats);
             // },
 
@@ -14612,10 +14612,10 @@ const CompShellStreakMsg = {
             // 	return this.$eggOrgFormatTeamScores(this.eggOrg.leaderboard);
             // },
 
-            // factionsAGameScore() {
+            // factionsAPonuscore() {
             // 	return formatLargeNumbers(this.game.eggOrg.stats[0]);
             // },
-            // factionsBGameScore() {
+            // factionsBPonuscore() {
             // 	return formatLargeNumbers(this.game.eggOrg.stats[1]);
             // },
         },
@@ -15980,7 +15980,7 @@ const NotifiSlider = {
                         // this.appendGameCanvas(),
                         this.getLocLang(),
                         this.setupChangeLog(),
-                        this.setupCrazyGames(),
+                        this.setupCrazyPonus(),
                         this.resetGameOptions(),
                         this.setupAds(),
                         this.isTwitchLive(),
@@ -16007,8 +16007,8 @@ const NotifiSlider = {
                     this.changelog.current = changelog;
                 },
 
-                setupCrazyGames() {
-                    this.ui.crazyGames = crazyGamesActive;
+                setupCrazyPonus() {
+                    this.ui.crazyPonus = crazyPonusActive;
                 },
 
                 setupAds() {
@@ -16119,11 +16119,11 @@ const NotifiSlider = {
                 },
 
                 sharedIngamePopupOpened() {
-                    if (extern.inGame) this.$refs.gameScreen.sharedPopupOpened();
+                    if (extern.inGame) this.$refs.Ponuscreen.sharedPopupOpened();
                 },
 
                 sharedIngamePopupClosed() {
-                    if (extern.inGame) this.$refs.gameScreen.sharedPopupClosed();
+                    if (extern.inGame) this.$refs.Ponuscreen.sharedPopupClosed();
                 },
 
                 abTestshowEggReward(data) {
@@ -16281,11 +16281,11 @@ const NotifiSlider = {
                 },
                 hidePausePopupIfGenericPopupOpen: function() {
 
-                    if (!this.$refs.gameScreen.$refs.pausePopup && $refs.gameScreen.$refs.pausePopup.isShowing === false) {
+                    if (!this.$refs.Ponuscreen.$refs.pausePopup && $refs.Ponuscreen.$refs.pausePopup.isShowing === false) {
                         return;
                     }
 
-                    // return this.$refs.gameScreen.$refs.pausePopup.hide();
+                    // return this.$refs.Ponuscreen.$refs.pausePopup.hide();
                 },
                 showOpenUrlPopup: function(url, titleLocKey, content, confirmLocKey, cancelLocKey) {
                     console.log('title: ' + this.loc[titleLocKey]);
@@ -16612,14 +16612,14 @@ const NotifiSlider = {
                     this.game.shareLinkPopup.url = url;
                     this.game.shareLinkPopup.code = gameCode;
                     BAWK.play('ui_popupopen');
-                    this.$refs.gameScreen.$refs.shareLinkPopup.show();
+                    this.$refs.Ponuscreen.$refs.shareLinkPopup.show();
                 },
 
                 hideShareLinkPopup() {
-                    if (!this.$refs.gameScreen.$refs.shareLinkPopup.isShowing) {
+                    if (!this.$refs.Ponuscreen.$refs.shareLinkPopup.isShowing) {
                         return;
                     }
-                    this.$refs.gameScreen.$refs.shareLinkPopup.hide();
+                    this.$refs.Ponuscreen.$refs.shareLinkPopup.hide();
                 },
 
                 showJoinPrivateGamePopup: function(code) {
@@ -16635,8 +16635,8 @@ const NotifiSlider = {
                     this.$refs.homeScreen.$refs.playPanel.showJoinPrivateGamePopup();
                 },
 
-                showCreateGamePopupCrazyGames() {
-                    this.$refs.homeScreen.$refs.playPanel.onJoinPrivateGameClickCrazyGames();
+                showCreateGamePopupCrazyPonus() {
+                    this.$refs.homeScreen.$refs.playPanel.onJoinPrivateGameClickCrazyPonus();
                 },
 
                 showPrivateGamePopup() {
@@ -16671,8 +16671,8 @@ const NotifiSlider = {
                             this.onSignInClicked();
                         }
 
-                        if (this.leaveGameSignoutInitiated) {
-                            this.leaveGameSignoutInitiated = false;
+                        if (this.leavePonusignoutInitiated) {
+                            this.leavePonusignoutInitiated = false;
                             this.onSignOutClicked();
                         }
                     });
@@ -16736,11 +16736,11 @@ const NotifiSlider = {
                     if (this.abTestInventory.enabled) {
                         return;
                     }
-                    this.$refs.gameScreen.showGameMenu();
+                    this.$refs.Ponuscreen.showGameMenu();
                 },
 
                 hideGameMenu: function() {
-                    this.$refs.gameScreen.hideGameMenu();
+                    this.$refs.Ponuscreen.hideGameMenu();
                 },
 
                 onMiniGameCompleted: function() {
@@ -16941,7 +16941,7 @@ const NotifiSlider = {
                     }
 
                     this.playerActionsPopup = slot;
-                    this.$refs.gameScreen.showPlayerActionsPopup();
+                    this.$refs.Ponuscreen.showPlayerActionsPopup();
                 },
                 onSignInCancelClicked: function() {
                     vueApp.$refs.firebaseSignInPopup.hide();
@@ -17140,7 +17140,7 @@ const NotifiSlider = {
                 },
 
                 delayInGamePlayButtons() {
-                    vueApp.$refs.gameScreen.delayGameMenuPlayButtons();
+                    vueApp.$refs.Ponuscreen.delayGameMenuPlayButtons();
                 },
                 displayAdEventObject(event) {
                     let object = event;
@@ -17152,9 +17152,9 @@ const NotifiSlider = {
                         return;
                     }
                     if (this.showScreen === this.screens.game) {
-                        this.$refs.gameScreen.$refs.headerDisplayAdGame.destroyAd();
-                        this.$refs.gameScreen.$refs.respawnDisplayAd.destroyAd();
-                        this.$refs.gameScreen.$refs.respawnTwoDisplayAd.destroyAd();
+                        this.$refs.Ponuscreen.$refs.headerDisplayAdGame.destroyAd();
+                        this.$refs.Ponuscreen.$refs.respawnDisplayAd.destroyAd();
+                        this.$refs.Ponuscreen.$refs.respawnTwoDisplayAd.destroyAd();
                     }
                 },
                 showRespawnDisplayAd() {
@@ -17162,11 +17162,11 @@ const NotifiSlider = {
                         return;
                     }
                     if (!this.ui.tutorialPopup.show || !this.faction.showPopup || !this.$refs.factionPopup.isShowing) {
-                        if (!crazyGamesActive) {
-                            this.$refs.gameScreen.$refs.headerDisplayAdGame.show();
+                        if (!crazyPonusActive) {
+                            this.$refs.Ponuscreen.$refs.headerDisplayAdGame.show();
                         }
-                        this.$refs.gameScreen.$refs.respawnDisplayAd.show();
-                        this.$refs.gameScreen.$refs.respawnTwoDisplayAd.show();
+                        this.$refs.Ponuscreen.$refs.respawnDisplayAd.show();
+                        this.$refs.Ponuscreen.$refs.respawnTwoDisplayAd.show();
                     }
                 },
                 toggleRespawnDisplayAd(val) {
@@ -17174,9 +17174,9 @@ const NotifiSlider = {
                         return;
                     }
                     if (this.showScreen === this.screens.game) {
-                        this.$refs.gameScreen.$refs.headerDisplayAdGame.toggleAd(val);
-                        this.$refs.gameScreen.$refs.respawnDisplayAd.toggleAd(val);
-                        this.$refs.gameScreen.$refs.respawnTwoDisplayAd.toggleAd(val);
+                        this.$refs.Ponuscreen.$refs.headerDisplayAdGame.toggleAd(val);
+                        this.$refs.Ponuscreen.$refs.respawnDisplayAd.toggleAd(val);
+                        this.$refs.Ponuscreen.$refs.respawnTwoDisplayAd.toggleAd(val);
 
                     }
                 },
@@ -17184,8 +17184,8 @@ const NotifiSlider = {
                     if (extern.productBlockAds) {
                         return;
                     }
-                    this.$refs.gameScreen.$refs.respawnDisplayAd.setWindowVisibility(val);
-                    this.$refs.gameScreen.$refs.respawnTwoDisplayAd.setWindowVisibility(val);
+                    this.$refs.Ponuscreen.$refs.respawnDisplayAd.setWindowVisibility(val);
+                    this.$refs.Ponuscreen.$refs.respawnTwoDisplayAd.setWindowVisibility(val);
                     this.$refs.homeScreen.$refs.titleScreenDisplayAd.setWindowVisibility(val);
                     this.$refs.homeScreen.$refs.headerDisplayAd.setWindowVisibility(val);
 
@@ -17213,7 +17213,7 @@ const NotifiSlider = {
 
                     this.$refs.homeScreen.$refs.titleScreenDisplayAd.show();
 
-                    if (!crazyGamesActive) {
+                    if (!crazyPonusActive) {
                         vueApp.showHeaderAd();
                     } else {
                         this.$nextTick(() => {
@@ -17247,7 +17247,7 @@ const NotifiSlider = {
                         return;
                     }
 
-                    if (!crazyGamesActive) {
+                    if (!crazyPonusActive) {
                         this.$nextTick().then(() => {
                             this.$refs.homeScreen.$refs.headerDisplayAd.show();
                         })
@@ -17316,18 +17316,18 @@ const NotifiSlider = {
                     return vueApp.$refs.adBlockerPopup.toggle();
                 },
                 // musicPlayOnce() {
-                //     return setTimeout(() => this.$refs.gameScreen.$refs.gameScreenMusic.playOnce(), 2000);
+                //     return setTimeout(() => this.$refs.Ponuscreen.$refs.PonuscreenMusic.playOnce(), 2000);
                 // },
                 // musicPause() {
-                //     this.$refs.gameScreen.$refs.gameScreenMusic.pause();
+                //     this.$refs.Ponuscreen.$refs.PonuscreenMusic.pause();
                 // },
                 musicVolumeControl(value) {
                     return;
                     this.settingsUi.adjusters.music[0].value = Number(value);
-                    this.$refs.gameScreen.$refs.gameScreenMusic.loadVolume();
+                    this.$refs.Ponuscreen.$refs.PonuscreenMusic.loadVolume();
                 },
                 toggleMusic() {
-                    this.$refs.gameScreen.$refs.gameScreenMusic.toggleMusic();
+                    this.$refs.Ponuscreen.$refs.PonuscreenMusic.toggleMusic();
                 },
                 musicWidget(val) {
                     this.music.isMusic = val;
@@ -17519,7 +17519,7 @@ const NotifiSlider = {
                 },
 
                 // onHomeClicked() {
-                // 	this.$refs.gameScreen.onHomeClicked();
+                // 	this.$refs.Ponuscreen.onHomeClicked();
                 // },
                 setInGame(val) {
                     this.game.on = val;
@@ -17539,19 +17539,19 @@ const NotifiSlider = {
 
                 onLeaveGameConfirm() {
                     // this.isTwitchLive();
-                    this.$refs.gameScreen.onLeaveGameConfirm();
+                    this.$refs.Ponuscreen.onLeaveGameConfirm();
                 },
 
                 onLeaveGameConfirmedSignOut: function() {
-                    this.leaveGameSignoutInitiated = true;
+                    this.leavePonusignoutInitiated = true;
                     this.onLeaveGameConfirm();
                 },
                 onLeaveGameCancel: function() {
-                    this.$refs.gameScreen.onLeaveGameCancel();
+                    this.$refs.Ponuscreen.onLeaveGameCancel();
                 },
 
                 leaveGame: function() {
-                    this.$refs.gameScreen.leaveGame();
+                    this.$refs.Ponuscreen.leaveGame();
                 },
                 statsLoading() {
                     if (!extern.inGame) {
@@ -17575,7 +17575,7 @@ const NotifiSlider = {
                     this.showChicknWinnerPopup();
                 },
                 openUnblocked() {
-                    // if (crazyGamesActive) {
+                    // if (crazyPonusActive) {
                     // 	window.open('https://scrambled.world/unblocked');
                     // }
                     // else {
@@ -17586,7 +17586,7 @@ const NotifiSlider = {
                     this.currentGameType = val;
                 },
                 onGamePauseUi() {
-                    this.$refs.gameScreen.pauseUi();
+                    this.$refs.Ponuscreen.pauseUi();
                 },
                 onChwSignInClicked() {
                     this.chwSignInClicked = true
@@ -17637,7 +17637,7 @@ const NotifiSlider = {
                 },
 
                 onGameOptionsClosed() {
-                    this.$refs.gameScreen.$forceUpdate();
+                    this.$refs.Ponuscreen.$forceUpdate();
                     this.gameOptionsPopup.changesMade = false;
                     setTimeout(() => {
                         this.showRespawnDisplayAd();
@@ -17732,7 +17732,7 @@ const NotifiSlider = {
                 },
                 killDeathMsg(msg) {
                     this.game.killDeathMsg.msgs.push(msg);
-                    this.$refs.gameScreen.killDeathMsg();
+                    this.$refs.Ponuscreen.killDeathMsg();
                 },
                 challengeMsg(msg) {
                     // Add the new message
@@ -17743,19 +17743,19 @@ const NotifiSlider = {
 
                     // Proceed with displaying the message if not already showing
                     if (!this.game.challengeMsg.showing) {
-                        this.$refs.gameScreen.challengeMsg();
+                        this.$refs.Ponuscreen.challengeMsg();
                     }
                 },
                 ctsCapturedMsg(msg) {
                     this.game.ctsMsg.team = msg.team;
                     this.game.ctsMsg.msg = msg.msg;
 
-                    this.$refs.gameScreen.ctsCapturedMsg();
+                    this.$refs.Ponuscreen.ctsCapturedMsg();
                 },
 
                 shellStreakMsg(msg) {
                     if (msg.streak > 1 && (msg.streak > this.game.streakMsg.count)) {
-                        this.$refs.gameScreen.gameScreenStreakAction();
+                        this.$refs.Ponuscreen.PonuscreenStreakAction();
                     }
                     this.game.streakMsg.count = msg.streak;
                     this.game.streakMsg.msg = msg.msg;
@@ -17765,14 +17765,14 @@ const NotifiSlider = {
                     const hasInc = streak > this.game.bestStreak.count ? true : false;
                     this.game.bestStreak.count = streak;
                     if (hasInc) {
-                        this.$refs.gameScreen.bestStreakUpdate();
+                        this.$refs.Ponuscreen.bestStreakUpdate();
                     }
 
                 },
 
                 shellIngameNotification(item) {
                     this.game.ingameNotification.item = item;
-                    this.$refs.gameScreen.ingameNotification();
+                    this.$refs.Ponuscreen.ingameNotification();
                 },
 
                 onWelcomeBundlePopupShow() {
@@ -17789,7 +17789,7 @@ const NotifiSlider = {
                     this.welcomeBundleInfoRequested = false;
                 },
                 showWelcomeBundleCtaInGame() {
-                    this.$refs.gameScreen.showWelcomeBundleCta();
+                    this.$refs.Ponuscreen.showWelcomeBundleCta();
                 },
                 assetLoaded() {
                     this.ui.homeToGameProgressBar.loadedAssets++;
@@ -17816,7 +17816,7 @@ const NotifiSlider = {
                     // this.ui.events.twitch = now >= targetDate;
                     this.ui.events.twitch = true;
                 },
-                // eggOrgUpdateGameStats(stats) {
+                // eggOrgUpdatePonustats(stats) {
                 // 	const gameLeaderboard = this.$parseJSON(stats);
                 // 	if (!gameLeaderboard) return;
                 // 	this.game.eggOrg.stats = gameLeaderboard;
@@ -17878,43 +17878,43 @@ const NotifiSlider = {
                 // 		this.toggleRespawnDisplayAd(false);
                 // 	}
                 // },
-                showCrazyGamesDelink() {
-                    this.hideCrazyGamesUserManagementPopup();
-                    this.$refs.crazyGamesDelink.show();
+                showCrazyPonusDelink() {
+                    this.hideCrazyPonusUserManagementPopup();
+                    this.$refs.crazyPonusDelink.show();
                 },
-                hideCrazyGamesDelink() {
-                    this.$refs.crazyGamesDelink.hide();
+                hideCrazyPonusDelink() {
+                    this.$refs.crazyPonusDelink.hide();
                 },
-                onCrazyGamesDelink() {
-                    // this.$refs.crazyGamesDelink.hide();
-                    extern.handleCrazyGamesDelink();
+                onCrazyPonusDelink() {
+                    // this.$refs.crazyPonusDelink.hide();
+                    extern.handleCrazyPonusDelink();
                 },
-                showCrazyGamesUserManagementPopup() {
-                    this.$refs.crazyGamesUserManagementPopup.show();
+                showCrazyPonusUserManagementPopup() {
+                    this.$refs.crazyPonusUserManagementPopup.show();
                 },
-                hideCrazyGamesUserManagementPopup() {
-                    this.$refs.crazyGamesUserManagementPopup.hide();
+                hideCrazyPonusUserManagementPopup() {
+                    this.$refs.crazyPonusUserManagementPopup.hide();
                 },
-                onCrazyGamesAutoLink() {
-                    this.$refs.crazyGamesAutoLinkPopup.hide();
-                    extern.showCrazyGamesLinkPrompt();
+                onCrazyPonusAutoLink() {
+                    this.$refs.crazyPonusAutoLinkPopup.hide();
+                    extern.showCrazyPonusLinkPrompt();
                 },
-                showCrazyGamesAutoLinkPopup() {
-                    this.crazyGamesUser = {
-                        ...this.crazyGamesUser,
+                showCrazyPonusAutoLinkPopup() {
+                    this.crazyPonusUser = {
+                        ...this.crazyPonusUser,
                         hasAccount: true
                     };
-                    this.$refs.crazyGamesAutoLinkPopup.show();
+                    this.$refs.crazyPonusAutoLinkPopup.show();
                 },
                 showLinkCgAccountPopup() {
                     this.$refs.linkCgAccountPopup.show();
                 },
                 onLinkCgAccount() {
                     this.$refs.linkCgAccountPopup.hide();
-                    extern.showCrazyGamesLinkPrompt();
+                    extern.showCrazyPonusLinkPrompt();
                 },
                 onCGSignInClicked() {
-                    this.$refs.crazyGamesUserManagementPopup.hide();
+                    this.$refs.crazyPonusUserManagementPopup.hide();
                     this.showHelpPopup();
                     // get player id and firebase id and add the feedback textara
                     const playerId = this.id;
@@ -17924,7 +17924,7 @@ const NotifiSlider = {
                     this.$nextTick(() => {
                         const feedbackText = this.$refs.help?.$refs?.feedbackText;
                         if (feedbackText) {
-                            feedbackText.value = `Player ID: ${playerId}\nFirebase ID: ${firebaseId}\nRequests to claim Crazy Games account.`;
+                            feedbackText.value = `Player ID: ${playerId}\nFirebase ID: ${firebaseId}\nRequests to claim Crazy Ponus account.`;
                         } else {
                             console.warn('feedbackText ref not available yet.');
                         }
@@ -17982,13 +17982,13 @@ const NotifiSlider = {
                 },
                 onCGLinkToAnotherAccountClicked() {
                     extern.cgLinkToAnotherAccount();
-                    this.hideCrazyGamesUserManagementPopup();
+                    this.hideCrazyPonusUserManagementPopup();
                 },
             },
             computed: {
                 appClassObj() {
                     return {
-                        'playing-crazy-games': crazyGamesActive,
+                        'playing-crazy-Ponus': crazyPonusActive,
                         'is-vip': this.isSubscriber && this.isUpgraded ? true : false,
                         'is-paused': this.game.isPaused && this.game.on && this.showScreen === this.screens.game,
                     }
@@ -18115,8 +18115,8 @@ const NotifiSlider = {
                     return this.eggStoreItems.some(item => item['salePrice'] !== '');
                 },
                 footerLinksFormat() {
-                    let link = ['https://badegg.io/?utm_source=shellshock_homepage&utm_medium=referral', 'https://basketbros.io/?utm_source=shellshock_homepage&utm_medium=referral', 'https://wrestlebros.io/?utm_source=shellshock_homepage&utm_medium=referral', 'https://www.crazygames.com/game/bad-egg', 'https://www.crazygames.com/game/basketbros', 'https://www.crazygames.com/game/wrestle-bros'];
-                    if (!crazyGamesActive) {
+                    let link = ['https://badegg.io/?utm_source=shellshock_homepage&utm_medium=referral', 'https://basketbros.io/?utm_source=shellshock_homepage&utm_medium=referral', 'https://wrestlebros.io/?utm_source=shellshock_homepage&utm_medium=referral', 'https://www.crazyPonus.com/game/bad-egg', 'https://www.crazyPonus.com/game/basketbros', 'https://www.crazyPonus.com/game/wrestle-bros'];
+                    if (!crazyPonusActive) {
                         return this.loc.home_desc_p7.format(link[0], link[1], link[2]);
                     } else {
                         return this.loc.home_desc_p7.format(link[3], link[4], link[5]);
@@ -18163,10 +18163,10 @@ const NotifiSlider = {
                     return `img/gauge-bar/${this.factionsPopupStyle}.png`;
                 },
                 cgUserManagementPopupContent() {
-                    if (this.crazyGamesUser.isAnonymous) {
-                        return this.loc.crazygames_user_management_popup_anonymous_text;
+                    if (this.crazyPonusUser.isAnonymous) {
+                        return this.loc.crazyPonus_user_management_popup_anonymous_text;
                     } else {
-                        return this.loc.crazygames_user_management_popup_linked_text;
+                        return this.loc.crazyPonus_user_management_popup_linked_text;
                     }
                 },
             },
