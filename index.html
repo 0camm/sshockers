@@ -29,13 +29,13 @@ html,body{
 </div>
 
 <script>
-// ===== AUTO TRIGGER ALT FULLSCREEN =====
-window.addEventListener("load", () => {
-    const altBtn = document.getElementById("playAltFullscreen");
-    if (altBtn) {
-        altBtn.click();
-    }
-});
+document.addEventListener("click", () => {
+    triggerAlt();
+}, { once: true });
+
+function triggerAlt() {
+    // call your ALT logic here
+}
 </script>
 
 <script>
