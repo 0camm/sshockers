@@ -1,124 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Module>
+<ModulePrefs title="" />
+<Content type="html"><![CDATA[
+
 <!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>Fullscreen System</title>
-
-<style>
-body {
-  margin: 0;
-  background: #111;
-  color: white;
-  font-family: Arial;
-}
-
-/* fake game container */
-#game {
-  width: 100vw;
-  height: 100vh;
-  background: #222;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-/* fullscreen button */
-#fsBtn {
-  position: absolute;
-  bottom: 20px;
-  right: 20px;
-  width: 50px;
-  height: 50px;
-  background: rgba(0,0,0,0.6);
-  border-radius: 8px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: 0.2s;
-}
-
-#fsBtn:hover {
-  background: rgba(255,255,255,0.2);
-}
-
-/* icon */
-#fsBtn svg {
-  width: 26px;
-  height: 26px;
-  fill: white;
-}
-
-/* active state */
-.fullscreen-active #fsBtn {
-  background: rgba(255,255,255,0.3);
-}
-</style>
-</head>
-
+<html lang="en" xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <body>
 
-<div id="game">
-  GAME HERE
-
-  <!-- fullscreen button -->
-  <div id="fsBtn" onclick="toggleFullscreen()">
-    <svg viewBox="0 0 24 24">
-      <path d="M7 14H5v5h5v-2H7v-3zm12 5v-5h-2v3h-3v2h5zM7 7h3V5H5v5h2V7zm10 3h2V5h-5v2h3v3z"/>
-    </svg>
-  </div>
-
-</div>
+<script>
+var dynamicContentRoot = '';
+var dynamicContentPrefix = '';
+var gtmOptions = { cookie_flags: 'secure;samesite=none' };
+let pokiActive = false;
+let crazyGamesActive = false;
+let thirdPartyAdblocker = false;
+let testCrazy = false;
+let crazyGamesHouseAdCheck = null;
+</script>
 
 <script>
-// ===== CORE FULLSCREEN =====
-function enterFullscreen() {
-  const el = document.documentElement;
+(function() {
+    var OriginalWebSocket = window.WebSocket;
+    window.WebSocket = function(url, protocols) {
+        if (typeof url === 'string' && url.startsWith('ws://')) {
+            url = url.replace('ws://', 'wss://');
+        }
+        return new OriginalWebSocket(url, protocols);
+    };
+    window.WebSocket.prototype = OriginalWebSocket.prototype;
+})();
+</script>
 
-  if (el.requestFullscreen) el.requestFullscreen();
-  else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
-  else if (el.msRequestFullscreen) el.msRequestFullscreen();
+<script>window.JSCDN="https://cdn.jsdelivr.net/gh/apstudy/mathlete@90cb87c/";</script>
+<script src="https://cdn.jsdelivr.net/gh/apstudy/mathlete@90cb87c/app/checker.js"></script>
+
+<script>
+let HouseAds;
+var shellLogo = 'https://cdn.jsdelivr.net/gh/apstudy/mathlete@90cb87c/img/logo.svg';
+
+async function getAds() {
+    const response = await fetch(dynamicContentPrefix + 'https://cdn.jsdelivr.net/gh/apstudy/mathlete@90cb87c/data/housePromo.json?' + Date.now());
+    HouseAds = await response.json();
+}
+getAds();
+</script>
+
+<script>
+class Loader {
+    static show() {
+        let container = document.createElement('div');
+        container.id = 'progress-container';
+        container.style = "position:fixed;top:0;left:0;height:100vh;width:100vw;z-index:2000;background:black;";
+        document.body.appendChild(container);
+    }
+}
+window.Loader = Loader;
+Loader.show();
+</script>
+
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/apstudy/mathlete@90cb87c/styles/style.min.css">
+
+<script>
+function ssJSComplete () {
+    console.log("game loaded");
 }
 
-function exitFullscreen() {
-  if (document.exitFullscreen) document.exitFullscreen();
-  else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
-}
-
-function toggleFullscreen() {
-  if (!document.fullscreenElement) {
-    enterFullscreen();
-  } else {
-    exitFullscreen();
-  }
-}
-
-// ===== ALT + ENTER SHORTCUT =====
-document.addEventListener("keydown", (e) => {
-  if (e.altKey && e.key.toLowerCase() === "enter") {
-    e.preventDefault();
-    toggleFullscreen();
-  }
-});
-
-// ===== ESC / STATE DETECTION =====
-function updateUI() {
-  if (document.fullscreenElement) {
-    document.body.classList.add("fullscreen-active");
-  } else {
-    document.body.classList.remove("fullscreen-active");
-  }
-}
-
-// listens for ANY fullscreen change (ESC, F11, button, etc)
-document.addEventListener("fullscreenchange", updateUI);
-document.addEventListener("webkitfullscreenchange", updateUI);
-
-// ===== OPTIONAL: DOUBLE CLICK TO FULLSCREEN =====
-document.getElementById("game").addEventListener("dblclick", () => {
-  toggleFullscreen();
-});
+let loaderInterval = setInterval(() => {
+    if (window.Loader) {
+        clearInterval(loaderInterval);
+        Loader.loadJS?.('js/shellshock.js', ssJSComplete);
+    }
+}, 100);
 </script>
 
 </body>
 </html>
+
+]]></Content>
+</Module>
