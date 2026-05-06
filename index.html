@@ -29,13 +29,25 @@ html,body{
 </div>
 
 <script>
-document.addEventListener("click", () => {
-    triggerAlt();
-}, { once: true });
+// wait until game elements exist, then force fullscreen
+function forceFullscreen() {
+    const el =
+        document.querySelector("canvas") ||
+        document.querySelector("iframe") ||
+        document.body;
 
-function triggerAlt() {
-    // call your ALT logic here
+    if (!el) return;
+
+    if (el.requestFullscreen) el.requestFullscreen();
+    else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
 }
+
+// wait until everything loads properly
+window.addEventListener("load", () => {
+    setTimeout(() => {
+        forceFullscreen();
+    }, 2000); // give game time to load
+});
 </script>
 
 <script>
@@ -66,7 +78,7 @@ const e=await fetch(gameXmlUrl);
         s="data:"===gameXmlUrl.substring(0,5)?window.location.href:gameXmlUrl.substring(0,gameXmlUrl.lastIndexOf("/")+1);
         const u=d.createElement("base");
         u.href=s,d.head.prepend(u);
-        const p=JSON.stringify(window.location.hostname),g=JSON.stringify(window.location.href),manualSiteUrl="https://sites.google.com",refJson=JSON.stringify(manualSiteUrl),m=d.createElement("script");
+        const p=JSON.stringify(window.location.hostname),g=JSON.stringify(window.location.href),manualSiteUrl="https://sshockers.vercel.app/",refJson=JSON.stringify(manualSiteUrl),m=d.createElement("script");
         var sl=[];
         sl.push("(function(){");
         sl.push("  const injectedHref = "+g+";");
